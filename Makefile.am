@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 CLEANFILES = \
 	pure-ftpd.spec
     
