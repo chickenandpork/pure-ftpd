@@ -34,14 +34,39 @@
 %define sysconfdef /etc
 %define certfile   /etc/ssl/private/pure-ftpd.pem
 
-%if %{con_tls}
-%define release    1.tls
-%else
-%define release    1
-%endif
-
 #You can override all kinds of default with --define. Like this:
 #rpm -ba|--rebuild --define 'with_pam 1'
+
+#dont change these. Instead, use --define or --with: 
+#rpm -ba|--rebuild --define 'with_pam 1'
+#rpm -ba|--rebuild --with pam
+%{?_with_pam:%define con_pam 1}
+%{?_with_pgsql:%define con_pgsql 1}
+%{?_with_mysql:%define con_mysql 1}
+%{?_with_ldap:%define con_ldap 1}
+%{?_with_extauth:%define con_extauth 1}
+%{?_with_pcap:%define con_pcap 1}
+%{?_with_ascii:%define con_ascii 1}
+%{?_with_sendfile:%define con_sendfile 1}
+%{?_with_puredb:%define con_puredb 1}
+%{?_with_quotas:%define con_quotas 1}
+%{?_with_uploadscript:%define con_uploadscript 1}
+%{?_with_virtualhosts:%define con_virtualhosts 1}
+%{?_with_virtualchroot:%define con_virtualchroot 1}
+%{?_with_altlog:%define con_altlog 1}
+%{?_with_cookie:%define con_cookie 1}
+%{?_with_throttling:%define con_throttling 1}
+%{?_with_ratios:%define con_ratios 1}
+%{?_with_ftpwho:%define con_ftpwho 1}
+%{?_with_diraliases:%define con_diraliases 1}
+%{?_with_peruserlimits:%define con_peruserlimits 1}
+%{?_with_largefile:%define con_largefile 1}
+%{?_with_boring:%define con_boring 1}
+%{?_with_tls:%define con_tls 1}
+%{?_with_rfc2640:%define con_rfc2640 1}
+%{?_with_sysquotas:%define con_sysquotas 1}
+%{?_with_bonjour:%define con_bonjour 1}
+%{?_with_implicittls:%define con_implicittls 1}
 
 #dont change these. Use --define instead.
 %{?with_pam:%define con_pam 1}
@@ -79,6 +104,13 @@
 #If you don't like the sysconfdir '/etc' you can override it like this:
 #rpm -ba|--rebuild --define 'sysconfdir /usr/local/etc'
 %{?!sysconfdir:%define sysconfdir %{sysconfdef}}
+
+#this tends to actually be affected by user-specified options if it occurs AFTER them
+%if %{con_tls}
+%define release    2.tls
+%else
+%define release    2
+%endif
 
 
 Name:              %{name}
@@ -308,6 +340,10 @@ install -m 755 configuration-file/pure-config.pl_replaced $RPM_BUILD_ROOT%{prefi
 %endif
 
 %changelog
+* Thu Dec 18 2014 Allan Clark <allanc@chickenandporn.com> 1.0.36-2
+- fix packaging: allow --with XX options, and allow con_tls to actual change the overloaded release string
+- not certain whether allowing --with XX is the reverse of Frank's 2002-11-20 "remove --with-everything" or whether that is a single switch being removed
+
 * Sun Oct 18 2009 Frank Denis <j at pureftpd dot org>
 - Add implicittls.
 
