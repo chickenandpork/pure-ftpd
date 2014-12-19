@@ -37,8 +37,8 @@
 #You can override all kinds of default with --define. Like this:
 #rpm -ba|--rebuild --define 'with_pam 1'
 
-#dont change these. Instead, use --define or --with: 
-#rpm -ba|--rebuild --define 'with_pam 1'
+#dont change these. Instead, use --define or --with:        (Note: see nearly-duplicate section 35 lines below)
+#rpm -ba|--rebuild --define '_with_pam 1'
 #rpm -ba|--rebuild --with pam
 %{?_with_pam:%define con_pam 1}
 %{?_with_pgsql:%define con_pgsql 1}
@@ -108,6 +108,7 @@
 #this tends to actually be affected by user-specified options if it occurs AFTER them
 %if %{con_tls}
 %define release    2.tls
+Provides:     	   ftp-server(ftps)
 %else
 %define release    2
 %endif
